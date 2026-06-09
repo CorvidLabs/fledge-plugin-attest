@@ -1,0 +1,42 @@
+{
+  "originHash" : "9dc934453c871f51461e342d213a78b1fa4c8c712fdb8fa26308423b21071fcd",
+  "pins" : [
+    {
+      "identity" : "attest",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/CorvidLabs/attest.git",
+      "state" : {
+        "revision" : "34874bf31588db88112e1221b88fb04c55a61a01",
+        "version" : "0.1.0"
+      }
+    },
+    {
+      "identity" : "swift-argument-parser",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-argument-parser",
+      "state" : {
+        "revision" : "6a52f3251125d74daf04fcbd5e6f08a75d074382",
+        "version" : "1.8.2"
+      }
+    },
+    {
+      "identity" : "swift-asn1",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-asn1.git",
+      "state" : {
+        "revision" : "a9a5efd40eaf558a2bcd48d64b1d1646be686008",
+        "version" : "1.7.1"
+      }
+    },
+    {
+      "identity" : "swift-crypto",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-crypto",
+      "state" : {
+        "revision" : "95ba0316a9b733e92bb6b071255ff46263bbe7dc",
+        "version" : "3.15.1"
+      }
+    }
+  ],
+  "version" : 3
+}
