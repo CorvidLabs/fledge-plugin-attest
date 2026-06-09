@@ -10,7 +10,7 @@ This plugin links [`AttestKit`](https://github.com/CorvidLabs/attest) directly, 
 
 > **macOS-only.** `attest`/`AttestKit` target macOS 13+, so this plugin does too. No Linux/Windows support.
 >
-> **Dependency.** This plugin depends on [`CorvidLabs/attest`](https://github.com/CorvidLabs/attest) via Swift Package Manager, pinned to the `0.1.0` release. `swift build` resolves it transitively; you need read access to that repository for the build to fetch it.
+> **Dependency.** This plugin depends on [`CorvidLabs/attest`](https://github.com/CorvidLabs/attest) via Swift Package Manager, `0.1.0` or newer. `swift build` resolves it transitively; you need read access to that repository for the build to fetch it.
 
 ## Install
 
