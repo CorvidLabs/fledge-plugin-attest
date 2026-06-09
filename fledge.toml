@@ -1,4 +1,4 @@
-# fledge.toml — project task definitions
+# fledge.toml: project task definitions
 [tasks]
 build = "swift build -c release"
 test = "swift test"
