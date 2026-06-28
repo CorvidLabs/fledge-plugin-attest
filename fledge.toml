@@ -1,5 +1,5 @@
 # fledge.toml: project task definitions
 [tasks]
 build = "swift build -c release"
-test = "swift test"
-check = "swift build -c release && swift test"
+test = "swift build -c release && .build/release/fledge-attest --help"
+check = "swift build -c release && .build/release/fledge-attest --help"

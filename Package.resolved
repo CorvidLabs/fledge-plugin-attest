@@ -1,13 +1,13 @@
 {
-  "originHash" : "f0cb788e134824ea4acc27d95e134212d5a67241b435804ea068c0399438d91d",
+  "originHash" : "82822af8f39c54d371ff54542f2091d9216862de4cbe6bc4b292e5004f9112d8",
   "pins" : [
     {
       "identity" : "attest",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/CorvidLabs/attest.git",
       "state" : {
-        "revision" : "3a754a38fd2a8dfd167e622c00837a1574bd2d44",
-        "version" : "0.3.0"
+        "revision" : "158d6b965648285530c1a540f74d65f6b3ced453",
+        "version" : "0.5.0"
       }
     },
     {

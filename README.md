@@ -10,7 +10,7 @@ This plugin links [`AttestKit`](https://github.com/CorvidLabs/attest) directly, 
 
 > **macOS-only.** `attest`/`AttestKit` target macOS 13+, so this plugin does too. No Linux/Windows support.
 >
-> **Dependency.** This plugin depends on [`CorvidLabs/attest`](https://github.com/CorvidLabs/attest) via Swift Package Manager, `0.1.0` or newer. `swift build` resolves it transitively; you need read access to that repository for the build to fetch it.
+> **Dependency.** This plugin depends on [`CorvidLabs/attest`](https://github.com/CorvidLabs/attest) via Swift Package Manager, `0.5.0` or newer. `swift build` resolves it transitively; you need read access to that repository for the build to fetch it.
 
 ## Install
 
@@ -30,11 +30,17 @@ fledge attest sign --reviewer human:leif --human-approved --sign
 # Pipe an augur verdict straight in (auto-fills verdict + confidence)
 augur check --json | fledge attest sign --reviewer agent:claude --from-augur -
 
+# Forward reviewed provenance onto a landed commit
+fledge attest forward --from feature-sha --to main-sha
+
 # Gate a range against .attest.json, exits non-zero on any violation (CI / agents)
-fledge attest verify --range main..HEAD
+fledge attest verify --range main..HEAD --color always
 
 # List the recorded ledger (add --json for machine output)
 fledge attest log
+
+# Generate a signing key without leaving fledge
+fledge attest keygen
 
 # Emit a single stable JSON audit document for a range
 fledge attest export --range main..HEAD --policy .attest.json
@@ -45,11 +51,13 @@ fledge attest export --range main..HEAD --policy .attest.json
 | Command | Purpose |
 |---------|---------|
 | `sign`   | Record an attestation for a commit, written to git notes. |
+| `forward` | Record a fresh attestation on a landed commit from an already-attested source commit. |
 | `verify` | Exit non-zero if any commit in a range violates policy (CI / agent gating). |
 | `log`    | List recorded attestations, human-readable or JSON. |
 | `export` | Emit the complete provenance trail across a range as one stable JSON audit document. |
+| `keygen` | Generate an Ed25519 signing keypair for signed attestations. |
 
-Signing uses the key from `attest keygen` (`~/.config/attest/key`). Generate one with the upstream `attest` CLI if you want signed attestations; unsigned attestations need no key.
+Signing uses the key from `fledge attest keygen` (`~/.config/attest/key`). Unsigned attestations need no key.
 
 Git notes are not pushed by default; share the ledger with `git push origin "refs/notes/*"`.
 

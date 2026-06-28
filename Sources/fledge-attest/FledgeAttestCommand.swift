@@ -9,9 +9,10 @@ import AttestKit
 ///
 /// This plugin links `AttestKit` directly, so it is self-contained: it needs no
 /// separately installed `attest` binary. It exposes the most useful subset of
-/// attest's surface — `sign`, `verify`, `log`, and `export` — driving the same
-/// engine types (`Attest`, `NotesStore`, `Verifier`, `Exporter`, `Policy`) that
-/// the upstream CLI uses, so behaviour and storage stay identical.
+/// attest's surface — `sign`, `forward`, `verify`, `log`, `export`, and
+/// `keygen` — driving the same engine types (`Attest`, `NotesStore`,
+/// `Verifier`, `Exporter`, `Policy`) that the upstream CLI uses, so behaviour
+/// and storage stay identical.
 @main
 struct FledgeAttestCommand: AsyncParsableCommand {
     static let configuration = CommandConfiguration(
@@ -24,10 +25,16 @@ struct FledgeAttestCommand: AsyncParsableCommand {
         is still a valid record — so the plugin works with zero setup. A policy in \
         `.attest.json` lets CI and agent loops gate on the recorded trust.
         """,
-        version: "0.1.0",
-        subcommands: [Sign.self, Verify.self, Log.self, Export.self],
+        version: "0.3.0",
+        subcommands: [Sign.self, Forward.self, Verify.self, Log.self, Export.self, Keygen.self],
         defaultSubcommand: Log.self
     )
+}
+
+/// Writes a diagnostic line to stderr so it never contaminates stdout (which
+/// may be piped or parsed as JSON).
+func warn(_ message: String) {
+    FileHandle.standardError.write(Data((message + "\n").utf8))
 }
 
 // MARK: - Shared options
@@ -42,6 +49,38 @@ struct RepoOptions: ParsableArguments {
         let store = NotesStore(path: path)
         try store.validate()
         return store
+    }
+}
+
+// MARK: - Color
+
+/// When to colorize human-readable output.
+enum ColorMode: String, ExpressibleByArgument, CaseIterable {
+    case auto
+    case always
+    case never
+}
+
+/// Shared color option for human-readable output.
+struct ColorOptions: ParsableArguments {
+    @Option(name: .long, help: "Colorize human output: auto (TTY only), always, or never.")
+    var color: ColorMode = .auto
+
+    /// Resolves whether color should be applied for human-readable output.
+    /// - Parameter json: Whether the command is emitting machine-readable JSON.
+    /// - Returns: A `Colorizer` gated on the resolved decision.
+    func colorizer(json: Bool) -> Colorizer {
+        guard !json else { return .plain }
+        switch color {
+        case .never:
+            return .plain
+        case .always:
+            return Colorizer(enabled: true)
+        case .auto:
+            let noColor = ProcessInfo.processInfo.environment["NO_COLOR"] != nil
+            let isTTY = isatty(fileno(stdout)) != 0
+            return Colorizer(enabled: isTTY && !noColor)
+        }
     }
 }
 
@@ -61,7 +100,7 @@ struct Sign: AsyncParsableCommand {
     @Option(name: .long, help: "Who or what reviewed, e.g. 'agent:claude' or 'human:leif'.")
     var reviewer: String
 
-    @Option(name: .long, help: "Reviewer confidence, 0...1.")
+    @Option(name: .long, help: "Reviewer confidence, 0...1. Use --confidence=VALUE for negative values.")
     var confidence: Double?
 
     @Option(name: .long, help: "Recorded verdict: proceed, review, or block.")
@@ -84,6 +123,12 @@ struct Sign: AsyncParsableCommand {
 
     @Flag(name: .long, help: "Emit the stored attestation as JSON.")
     var json = false
+
+    func validate() throws {
+        if let confidence, !(0.0...1.0).contains(confidence) {
+            throw ValidationError("confidence must be in 0...1 (got \(confidence))")
+        }
+    }
 
     func run() async throws {
         let store = try repo.makeStore()
@@ -126,7 +171,15 @@ struct Sign: AsyncParsableCommand {
 
         var signer: Ed25519Signer?
         if sign {
-            signer = try KeyStore().load()
+            let keyStore = KeyStore()
+            if let permissions = keyStore.loosePermissions {
+                warn(
+                    "attest sign: warning: signing key \(keyStore.path) has permissions "
+                        + "0\(String(permissions, radix: 8)) (expected 0600); "
+                        + "run `chmod 600 \(keyStore.path)` to restrict it"
+                )
+            }
+            signer = try keyStore.load()
         }
 
         let attest = Attest(store: store)
@@ -153,6 +206,97 @@ struct Sign: AsyncParsableCommand {
     }
 }
 
+// MARK: - forward
+
+/// Records a fresh attestation on a landed commit from an already-attested source commit.
+struct Forward: AsyncParsableCommand {
+    static let configuration = CommandConfiguration(
+        abstract: "Record a fresh attestation on a landed commit from an already-attested source commit."
+    )
+
+    @OptionGroup var repo: RepoOptions
+
+    @Option(name: .long, help: "The reviewed source commit whose attestations are being forwarded.")
+    var from: String
+
+    @Option(name: .long, help: "The landed commit to attest. Defaults to HEAD.")
+    var to: String = "HEAD"
+
+    @Option(name: .long, help: "Who is forwarding provenance, e.g. 'ci:merge-bot'.")
+    var reviewer: String = "ci:attest-forward"
+
+    @Option(name: .long, help: "An optional free-text note appended to the forwarding note.")
+    var note: String?
+
+    @Flag(name: .long, help: "Sign the forwarded attestation with the key from `attest keygen`.")
+    var sign = false
+
+    @Flag(name: .long, help: "Emit the stored attestation as JSON.")
+    var json = false
+
+    func run() async throws {
+        let store = try repo.makeStore()
+        let source = try store.resolve(revision: from)
+        let target = try store.resolve(revision: to)
+        let sourceAttestations = try store.attestations(for: source)
+            .filter { $0.commit == source }
+            .filter { attestation in
+                !attestation.isSigned || Ed25519Verifier.isValid(attestation)
+            }
+        guard !sourceAttestations.isEmpty else {
+            throw AttestError.noAttestations(commit: source)
+        }
+
+        let forwarded = Attestation(
+            commit: target,
+            reviewer: reviewer,
+            confidence: sourceAttestations.map(\.confidence).max() ?? 0,
+            verdict: sourceAttestations.compactMap(\.verdict).max(),
+            testsPassed: sourceAttestations.contains { $0.testsPassed },
+            humanApproved: sourceAttestations.contains { $0.humanApproved },
+            timestamp: Int(Date().timeIntervalSince1970),
+            note: Self.forwardNote(source: source, sourceAttestations: sourceAttestations, extra: note)
+        )
+
+        var signer: Ed25519Signer?
+        if sign {
+            let keyStore = KeyStore()
+            if let permissions = keyStore.loosePermissions {
+                warn(
+                    "attest forward: warning: signing key \(keyStore.path) has permissions "
+                        + "0\(String(permissions, radix: 8)) (expected 0600); "
+                        + "run `chmod 600 \(keyStore.path)` to restrict it"
+                )
+            }
+            signer = try keyStore.load()
+        }
+
+        let stored = try Attest(store: store).record(forwarded, signer: signer)
+        if json {
+            print(try stored.jsonString())
+        } else {
+            let signedNote = stored.isSigned ? " (signed)" : ""
+            print(
+                "attest · forwarded \(String(source.prefix(10))) to "
+                    + "\(String(target.prefix(10))) as \(reviewer)\(signedNote)"
+            )
+        }
+    }
+
+    private static func forwardNote(source: String, sourceAttestations: [Attestation], extra: String?) -> String {
+        let reviewers = Set(sourceAttestations.map(\.reviewer)).sorted().joined(separator: ", ")
+        var parts = [
+            "forwarded from \(source)",
+            "source records: \(sourceAttestations.count)",
+            "source reviewers: \(reviewers)"
+        ]
+        if let extra, !extra.isEmpty {
+            parts.append(extra)
+        }
+        return parts.joined(separator: "; ")
+    }
+}
+
 // MARK: - verify
 
 /// Exits non-zero if any commit in a range violates policy (for CI / agent gating).
@@ -169,11 +313,16 @@ struct Verify: AsyncParsableCommand {
     @Option(name: .long, help: "Check a single commit (SHA or revision). Defaults to HEAD.")
     var commit: String?
 
-    @Option(name: .long, help: "Path to the policy file.")
-    var policy: String = ".attest.json"
+    @Option(name: .long, help: "Path to the policy file (default: .attest.json when present).")
+    var policy: String?
+
+    /// The implicit policy path consulted when `--policy` is not given.
+    private static let defaultPolicyPath = ".attest.json"
 
     @Flag(name: .long, help: "Emit machine-readable JSON.")
     var json = false
+
+    @OptionGroup var colorOptions: ColorOptions
 
     func run() async throws {
         let store = try repo.makeStore()
@@ -188,8 +337,10 @@ struct Verify: AsyncParsableCommand {
         }
 
         let loadedPolicy: Policy
-        if FileManager.default.fileExists(atPath: policy) {
+        if let policy {
             loadedPolicy = try Policy.load(fromFile: policy)
+        } else if FileManager.default.fileExists(atPath: Self.defaultPolicyPath) {
+            loadedPolicy = try Policy.load(fromFile: Self.defaultPolicyPath)
         } else {
             loadedPolicy = .default
         }
@@ -200,7 +351,7 @@ struct Verify: AsyncParsableCommand {
         if json {
             print(try result.jsonString())
         } else {
-            print(Reporter.renderVerification(result))
+            print(Reporter.renderVerification(result, colorizer: colorOptions.colorizer(json: json)))
         }
 
         if !result.passed {
@@ -228,6 +379,8 @@ struct Log: AsyncParsableCommand {
     @Flag(name: .long, help: "Emit machine-readable JSON.")
     var json = false
 
+    @OptionGroup var colorOptions: ColorOptions
+
     func run() async throws {
         let store = try repo.makeStore()
 
@@ -240,15 +393,36 @@ struct Log: AsyncParsableCommand {
             commits = try store.attestedCommits()
         }
 
-        let groups: [(commit: String, attestations: [Attestation])] = try commits.compactMap { sha in
-            let attestations = try store.attestations(for: sha)
-            return attestations.isEmpty ? nil : (commit: sha, attestations: attestations)
+        var groups: [(commit: String, attestations: [Attestation])] = []
+        var hadUnreadable = false
+        var hadMismatch = false
+        for sha in commits {
+            let (attestations, malformedLines) = try store.lenientAttestations(for: sha)
+            if malformedLines > 0 {
+                hadUnreadable = true
+                let lines = malformedLines == 1 ? "1 malformed record line" : "\(malformedLines) malformed record lines"
+                warn("attest log: \(sha): skipped \(lines) (invalid JSON); showing the readable records")
+            }
+            if !attestations.isEmpty {
+                groups.append((commit: sha, attestations: attestations))
+                for attestation in attestations where attestation.commit != sha {
+                    hadMismatch = true
+                    warn(
+                        "attest log: \(sha): record names commit \(attestation.commit), "
+                            + "not the commit it is stored under (cross-commit mismatch)"
+                    )
+                }
+            }
         }
 
         if json {
             print(try Self.renderJSON(groups))
         } else {
-            print(Reporter.renderLog(groups))
+            print(Reporter.renderLog(groups, colorizer: colorOptions.colorizer(json: json)))
+        }
+
+        if hadUnreadable || hadMismatch {
+            throw ExitCode(1)
         }
     }
 
@@ -297,7 +471,7 @@ struct Export: AsyncParsableCommand {
         } else if let range {
             commits = try store.commits(inRange: range)
         } else {
-            commits = try store.attestedCommits()
+            commits = try store.attestedCommits().reversed()
         }
 
         var loadedPolicy: Policy?
@@ -307,5 +481,24 @@ struct Export: AsyncParsableCommand {
 
         let report = try Exporter(store: store).report(commits: commits, policy: loadedPolicy)
         print(try report.jsonString(pretty: pretty))
+    }
+}
+
+// MARK: - keygen
+
+/// Generates an Ed25519 signing keypair for signing attestations.
+struct Keygen: AsyncParsableCommand {
+    static let configuration = CommandConfiguration(
+        abstract: "Generate an Ed25519 signing keypair for signing attestations."
+    )
+
+    @Flag(name: .long, help: "Overwrite an existing key.")
+    var force = false
+
+    func run() async throws {
+        let keyStore = KeyStore()
+        let signer = try keyStore.generate(force: force)
+        print("attest · wrote private key to \(keyStore.path) (0600)")
+        print("public key: \(signer.base64PublicKey)")
     }
 }
