@@ -48,10 +48,10 @@
     <div class="hero">
       <span class="hero-icon">🔏</span>
       <h1>fledge-plugin-attest</h1>
-      <p class="subtitle">Record and verify signed provenance attestations on git commits: sign, verify, log, and export, as <code>fledge attest</code>. Built in Swift on AttestKit.</p>
+      <p class="subtitle">Record, forward, and verify signed provenance attestations on git commits: sign, forward, verify, log, and export, as <code>fledge attest</code>. Built in Swift on AttestKit.</p>
       <div class="badges">
         <span class="badge badge--official">✓ official</span>
-        <span class="badge badge--version">v0.2.0</span>
+        <span class="badge badge--version">v0.3.0</span>
         <span class="badge badge--lang">Swift</span>
       </div>
     </div>
@@ -65,14 +65,16 @@
     <div class="card">
       <h2>Commands</h2>
       <ul class="commands-list">
-        <li><span class="cmd-name">fledge attest</span><span class="cmd-desc">Record and verify signed provenance attestations stored in git notes</span></li>
+        <li><span class="cmd-name">fledge attest</span><span class="cmd-desc">Record, forward, and verify signed provenance attestations stored in git notes</span></li>
       </ul>
     </div>
     <div class="card">
       <h2>Usage</h2>
       <div class="usage-block"><span class="cmd">  fledge attest sign --reviewer agent:claude --confidence 0.9 --verdict proceed</span>
-<span class="cmd">  fledge attest verify --range main..HEAD</span>
+<span class="cmd">  fledge attest forward --from feature-sha --to main-sha</span>
+<span class="cmd">  fledge attest verify --range main..HEAD --color always</span>
 <span class="cmd">  fledge attest log --json</span>
+<span class="cmd">  fledge attest keygen</span>
 <span class="cmd">  fledge attest export --range main..HEAD --policy .attest.json</span>
 </div>
     </div>
