@@ -24,6 +24,10 @@ let package = Package(
             swiftSettings: [
                 .enableExperimentalFeature("StrictConcurrency")
             ]
+        ),
+        .testTarget(
+            name: "fledge-attestTests",
+            dependencies: ["fledge-attest"]
         )
     ]
 )
