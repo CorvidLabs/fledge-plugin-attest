@@ -6,8 +6,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/CorvidLabs/attest.git",
       "state" : {
-        "revision" : "158d6b965648285530c1a540f74d65f6b3ced453",
-        "version" : "0.5.0"
+        "revision" : "a22db7e266a3cd7560fdf89a154a7ed8c8393a11",
+        "version" : "1.0.0"
       }
     },
     {

@@ -11,7 +11,7 @@ let package = Package(
         .executable(name: "fledge-attest", targets: ["fledge-attest"])
     ],
     dependencies: [
-        .package(url: "https://github.com/CorvidLabs/attest.git", from: "0.5.0"),
+        .package(url: "https://github.com/CorvidLabs/attest.git", from: "1.0.0"),
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.3.0"),
     ],
     targets: [
@@ -24,6 +24,10 @@ let package = Package(
             swiftSettings: [
                 .enableExperimentalFeature("StrictConcurrency")
             ]
+        ),
+        .testTarget(
+            name: "fledge-attestTests",
+            dependencies: ["fledge-attest"]
         )
     ]
 )
