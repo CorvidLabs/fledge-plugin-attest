@@ -1,6 +1,6 @@
 [plugin]
 name = "fledge-plugin-attest"
-version = "0.3.0"
+version = "1.0.0"
 description = "🔏 Record and verify signed provenance attestations on git commits: sign, verify, log, and export, as `fledge attest`. Built in Swift on AttestKit."
 author = "0xLeif"
 license = "MIT"
