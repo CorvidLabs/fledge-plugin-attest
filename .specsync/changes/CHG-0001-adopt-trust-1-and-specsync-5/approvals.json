@@ -6,20 +6,6 @@
       "timestamp": 1783830620,
       "digest": "0059dc4809286b83ec1b5e424a62f59c9fc2e8e324508c6c2cc840346dab8961",
       "note": "Authorized by the approved organization-wide SpecSync 5 / Trust 1 migration plan."
-    },
-    {
-      "gate": "definition",
-      "actor": "0xLeif",
-      "timestamp": 1783904442,
-      "digest": "d8c3167dfdf3d8c37a17060c1f7fca52cfad0a659586648ed695f5b428ead806",
-      "note": "Reviewed Attest plugin governance adoption after strict coverage, all agents, hosted technical success, and required trust protection."
-    },
-    {
-      "gate": "acceptance",
-      "actor": "0xLeif",
-      "timestamp": 1783904492,
-      "digest": "812f270efee85b7b327aabe672eeaa278d3c0ae469217bf969d817bd3239d3c0",
-      "note": "Approved after strict Attest plugin adoption verification, full release/test/smoke lane, hosted technical success, and required trust protection."
     }
   ]
 }

@@ -1,6 +1,6 @@
 ---
 id: CHG-0003-address-final-governance-review-feedback
-state: draft
+state: accepted
 type: feature
 base_commit: 5999226999da5b41b717f1674b21f2746c820933
 ---
@@ -13,7 +13,7 @@ Address final governance review feedback
 
 ## Affected Canonical Specs
 
-None.
+- None
 
 ## Acceptance Criteria
 

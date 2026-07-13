@@ -5,7 +5,7 @@
   "title": "Refresh locked Attest 1.0 dependency",
   "description": "Refresh locked Attest 1.0 dependency",
   "kind": "migration",
-  "state": "accepted",
+  "state": "implementing",
   "base_commit": "afff3043714fb5e66bf2ca1fc3780a97c0262d19",
   "created_at": 1783831081,
   "updated_at": 1783904442,

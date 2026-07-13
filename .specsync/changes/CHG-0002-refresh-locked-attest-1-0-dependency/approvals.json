@@ -6,20 +6,6 @@
       "timestamp": 1783831114,
       "digest": "f40432292350dfd3dae717a512ab6e5d3ac7afebd7f72fc08348f38ba79d7d0e",
       "note": "Authorized by the approved organization-wide SpecSync 5 / Trust 1 migration plan."
-    },
-    {
-      "gate": "definition",
-      "actor": "0xLeif",
-      "timestamp": 1783904402,
-      "digest": "e16aeaa3b2c4903eff01d38d366e75c62c6c7f5752dc7cee076a426bd4e5ac15",
-      "note": "Reviewed the stable Attest 1.0 lockfile refresh after local and hosted build-test and Trust success."
-    },
-    {
-      "gate": "acceptance",
-      "actor": "0xLeif",
-      "timestamp": 1783904442,
-      "digest": "989d71b1efe59a30e9dc5a5c78a1a4aaee518372711c87ca05149a845909e013",
-      "note": "Approved after the full release build, unit test, executable help smoke, and hosted Trust verification."
     }
   ]
 }

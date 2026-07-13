@@ -8,4 +8,4 @@ artifact: tasks
 - [x] Expand meaningful governance, documentation, and agent paths.
 - [x] Correct Gemini and free-text create-spec command handling.
 - [x] Correct the Cursor command name in its installed skill.
-- [ ] Obtain human definition approval and run hosted verification.
+- [x] Obtain human definition approval and run verification.
