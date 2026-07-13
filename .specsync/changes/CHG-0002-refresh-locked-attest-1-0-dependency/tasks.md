@@ -7,4 +7,4 @@ artifact: tasks
 
 - [x] Refresh the stable component lock.
 - [x] Run local package validation.
-- [ ] Pass hosted pull-request checks.
+- [x] Pass hosted build-test and unified Trust checks with the refreshed lockfile.

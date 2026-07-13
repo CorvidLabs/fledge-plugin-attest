@@ -1,6 +1,6 @@
 ---
 id: CHG-0002-refresh-locked-attest-1-0-dependency
-state: implementing
+state: accepted
 type: migration
 base_commit: afff3043714fb5e66bf2ca1fc3780a97c0262d19
 ---
