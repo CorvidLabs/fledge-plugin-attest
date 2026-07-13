@@ -6,6 +6,20 @@
       "timestamp": 1783830620,
       "digest": "0059dc4809286b83ec1b5e424a62f59c9fc2e8e324508c6c2cc840346dab8961",
       "note": "Authorized by the approved organization-wide SpecSync 5 / Trust 1 migration plan."
+    },
+    {
+      "gate": "definition",
+      "actor": "0xLeif",
+      "timestamp": 1783916366,
+      "digest": "d8c3167dfdf3d8c37a17060c1f7fca52cfad0a659586648ed695f5b428ead806",
+      "note": "Reapproved the complete Attest plugin Trust 1 and SpecSync 5 adoption against the final review-remediation inputs."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "0xLeif",
+      "timestamp": 1783916442,
+      "digest": "5aa3bf6729d661f638e3a1b485106badd7c8f8b6f04b550a6ba12ffaee8d5e07",
+      "note": "Accepted after final strict adoption inputs passed the release build, Swift tests, and executable help smoke verification."
     }
   ]
 }
