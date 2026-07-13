@@ -1,0 +1,25 @@
+{
+  "approvals": [
+    {
+      "gate": "definition",
+      "actor": "0xLeif",
+      "timestamp": 1783916269,
+      "digest": "85a838e12deb39ba0b1a238a9a2dfb2c012dee8effbda2760dff5baae370432f",
+      "note": "Reviewed the final Attest plugin governance remediation: complete meaningful paths, correct agent command argument handling, and accurate installed command names."
+    },
+    {
+      "gate": "definition",
+      "actor": "0xLeif",
+      "timestamp": 1783916292,
+      "digest": "b10a4a9f526977ccb3691a217be545015ae10e5f3ff9d692e8c32b4aee9bdcda",
+      "note": "Reapproved the completed review-remediation artifact set before verification."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "0xLeif",
+      "timestamp": 1783916328,
+      "digest": "2d1a6f02f1e525799c234699b009a2bdcf73db2340815f29ed233d21d006e994",
+      "note": "Accepted after the full native release build, Swift test, and executable help smoke lane passed."
+    }
+  ]
+}

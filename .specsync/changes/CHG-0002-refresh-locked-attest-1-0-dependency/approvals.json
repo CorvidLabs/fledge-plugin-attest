@@ -1,0 +1,25 @@
+{
+  "approvals": [
+    {
+      "gate": "definition",
+      "actor": "user:0xLeif",
+      "timestamp": 1783831114,
+      "digest": "f40432292350dfd3dae717a512ab6e5d3ac7afebd7f72fc08348f38ba79d7d0e",
+      "note": "Authorized by the approved organization-wide SpecSync 5 / Trust 1 migration plan."
+    },
+    {
+      "gate": "definition",
+      "actor": "0xLeif",
+      "timestamp": 1783916366,
+      "digest": "e16aeaa3b2c4903eff01d38d366e75c62c6c7f5752dc7cee076a426bd4e5ac15",
+      "note": "Reapproved the Attest 1.0 lockfile refresh against the final governance delivery inputs."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "0xLeif",
+      "timestamp": 1783916425,
+      "digest": "39341d64a77451ff4fe98971249c98943e508b1c1c88a8e652f4320955d1f2c5",
+      "note": "Accepted after the final release build, Swift test, and executable smoke verification passed with the locked Attest 1.0 dependency."
+    }
+  ]
+}

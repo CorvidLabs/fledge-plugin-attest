@@ -2,4 +2,9 @@
 [tasks]
 build = "swift build -c release"
 test = "swift build -c release && .build/release/fledge-attest --help"
+unit = "swift test"
 check = "swift build -c release && .build/release/fledge-attest --help"
+
+[lanes.verify]
+description = "Build, test, and smoke-test the Attest plugin"
+steps = ["build", "unit", "test"]

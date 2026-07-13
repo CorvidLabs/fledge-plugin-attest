@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "id": "CHG-0002-refresh-locked-attest-1-0-dependency",
+  "slug": "refresh-locked-attest-1-0-dependency",
+  "title": "Refresh locked Attest 1.0 dependency",
+  "description": "Refresh locked Attest 1.0 dependency",
+  "kind": "migration",
+  "state": "accepted",
+  "base_commit": "afff3043714fb5e66bf2ca1fc3780a97c0262d19",
+  "created_at": 1783831081,
+  "updated_at": 1783916425,
+  "affected_specs": [],
+  "affected_paths": [
+    "Package.resolved"
+  ],
+  "no_spec_change": true,
+  "no_spec_change_rationale": "Refresh the lockfile to the already-declared stable 1.0 component without changing plugin behavior.",
+  "acceptance_criteria": [
+    "The locked dependency resolves to the declared stable 1.0 release and the native verify lane passes"
+  ],
+  "selected_artifacts": [
+    "context",
+    "research",
+    "design",
+    "plan",
+    "tasks",
+    "testing",
+    "docs"
+  ],
+  "dependencies": [],
+  "answers": {
+    "architecture_risk": "no",
+    "public_contract": "no"
+  }
+}
