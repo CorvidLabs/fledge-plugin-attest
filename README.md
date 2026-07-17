@@ -8,7 +8,7 @@ It records *who or what reviewed a change and at what confidence*, keyed to git 
 
 This plugin links [`AttestKit`](https://github.com/CorvidLabs/attest) directly, so it is **self-contained**: there is no separate `attest` binary to install. It drives the same engine types the upstream CLI uses, so behaviour and storage are identical.
 
-> **macOS-only.** `attest`/`AttestKit` target macOS 13+, so this plugin does too. No Linux/Windows support.
+> **macOS and Linux.** `attest`/`AttestKit` builds and is CI-tested on both macOS 13+ and Linux (see the upstream repo's `build-test-macos` and `build-test-linux` jobs), so this plugin is too. Windows is out of scope.
 >
 > **Dependency.** This plugin depends on [`CorvidLabs/attest`](https://github.com/CorvidLabs/attest) via Swift Package Manager, `1.0.0` or newer. `swift build` resolves it transitively; you need read access to that repository for the build to fetch it.
 
