@@ -9,7 +9,7 @@ base_commit: aa1a28639ef5191900ec251c562dbef7ae40882d
 
 ## Intent
 
-Correct the platform-support documentation to reflect the macOS and Linux platforms supported by the linked AttestKit engine.
+Correct the platform-support documentation for the linked AttestKit engine.
 
 ## Affected Canonical Specs
 
