@@ -17,7 +17,7 @@
     "README.md states that the plugin supports macOS and Linux and keeps Windows out of scope.",
     "The documentation accurately distinguishes upstream CI evidence from this plugin's support statement."
   ],
-  "selected_artifacts": ["context", "research", "design", "plan", "tasks", "testing", "docs"],
+  "selected_artifacts": ["context","research","design","plan","tasks","testing","docs"],
   "dependencies": [],
-  "answers": {"architecture_risk": "no", "public_contract": "yes"}
+  "answers": {"architecture_risk": "no", "public_contract": "no"}
 }
