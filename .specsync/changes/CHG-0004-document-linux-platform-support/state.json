@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "CHG-0004-document-linux-platform-support",
+  "slug": "document-linux-platform-support",
+  "title": "Document Linux platform support",
+  "description": "Correct the platform-support documentation for the linked AttestKit engine.",
+  "kind": "docs",
+  "state": "implementing",
+  "base_commit": "aa1a28639ef5191900ec251c562dbef7ae40882d",
+  "created_at": 1784392600,
+  "updated_at": 1784392600,
+  "affected_specs": [],
+  "affected_paths": [
+    "README.md"
+  ],
+  "no_spec_change": true,
+  "no_spec_change_rationale": "This change corrects public documentation only and does not alter runtime behavior or canonical requirements.",
+  "acceptance_criteria": [
+    "README.md states that the plugin supports macOS and Linux and keeps Windows out of scope.",
+    "The documentation accurately distinguishes upstream CI evidence from this plugin's support statement."
+  ],
+  "selected_artifacts": [
+    "context",
+    "research",
+    "design",
+    "plan",
+    "tasks",
+    "testing",
+    "docs"
+  ],
+  "dependencies": [],
+  "answers": {
+    "architecture_risk": "no",
+    "public_contract": "yes"
+  }
+}
