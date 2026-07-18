@@ -1,3 +1,8 @@
+---
+change: CHG-0004-document-linux-platform-support
+artifact: testing
+---
+
 # Testing
 
-Hosted Trust verification is the required validation for this documentation change.
+The native `fledge lanes run verify` lane passed; hosted Trust verification remains required.

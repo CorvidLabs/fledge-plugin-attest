@@ -1,7 +1,7 @@
 ---
 id: CHG-0004-document-linux-platform-support
 state: implementing
-type: docs
+type: documentation
 base_commit: aa1a28639ef5191900ec251c562dbef7ae40882d
 ---
 
