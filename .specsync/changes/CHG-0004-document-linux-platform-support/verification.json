@@ -1,0 +1,13 @@
+{
+  "timestamp": 1784394736,
+  "commit": "f29f5fe064369ad4866acb863b11f18ab52bf0f5",
+  "passed": true,
+  "commands": [
+    {
+      "command": "fledge lanes run verify",
+      "success": true,
+      "exit_code": 0
+    }
+  ],
+  "requirement_ids": []
+}

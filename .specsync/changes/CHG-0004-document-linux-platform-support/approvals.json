@@ -1,0 +1,12 @@
+{
+  "approvals": [
+    {
+      "gate": "definition",
+      "actor": "agent:codex",
+      "timestamp": 1784395354,
+      "digest": "9a7e0b8e67a5c969ce09809c4c7a4d2dec8c3bbf90d6240b1ef4455ba2aa9fa4",
+      "note": "Automated documentation correction requested by the PR owner"
+    }
+  ],
+  "reopenings": []
+}
