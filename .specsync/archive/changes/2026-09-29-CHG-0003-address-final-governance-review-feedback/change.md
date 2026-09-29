@@ -1,6 +1,6 @@
 ---
 id: CHG-0003-address-final-governance-review-feedback
-state: accepted
+state: archived
 type: feature
 base_commit: 5999226999da5b41b717f1674b21f2746c820933
 ---
